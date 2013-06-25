@@ -13,6 +13,8 @@
 	
 	public class CasparSystemTime extends UIComponent implements ICasparComponent
 	{
+		private const DAY_MILLISECONDS:Number = 24 * 60 * 60 * 1000;
+
 		private var _displayField:TimerDisplay;
 		
 		private var _offset:Number;
@@ -77,6 +79,16 @@ trace("draw: " + width + " " + height);
 			
 			// add offset minutes value
 			milliseconds = milliseconds + (_offset * 60 * 1000);
+			
+			// check for day change because of offset
+			if (milliseconds > DAY_MILLISECONDS)
+			{
+				milliseconds = milliseconds - DAY_MILLISECONDS;
+			}
+			else if (milliseconds < 0)
+			{
+				milliseconds = milliseconds + DAY_MILLISECONDS;
+			}
 
 			// update time display
 			_displayField.UpdateTimerDisplay(_formatProvider.formatTime(milliseconds));
