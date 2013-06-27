@@ -7,15 +7,18 @@
 	import flash.system.Capabilities;
 	import flash.text.Font;
 	import flash.text.TextField;
+	import flash.text.TextFormat;
 	import flash.utils.Timer;
 	import flash.events.TimerEvent;
 	import se.svt.caspar.template.components.ICasparComponent;
+	import fl.motion.Color;
 	
 	public class CasparSystemTime extends UIComponent implements ICasparComponent
 	{
 		private const DAY_MILLISECONDS:Number = 24 * 60 * 60 * 1000;
 
 		private var _displayField:TimerDisplay;
+		private var _textFormat:TextFormat;
 		
 		private var _offset:Number;
 		private var _format:String;
@@ -29,7 +32,20 @@ trace("CasparSystemTime");
 			_offset = 0;
 			_format = "24hh:mm:ss";
 			_formatProvider = new TimerDisplayFormat_24hhmmss();
+
+			_textFormat = new TextFormat();
+			_textFormat.font = "Arial";
+			_textFormat.color = 0x000000;
+			_textFormat.size = 12;
+			_textFormat.align = "left";
+			_textFormat.bold = false;
+			_textFormat.italic = false;
 			
+			_displayField.DisplayTextFormat = _textFormat;
+
+trace(this.Italic);
+
+
 			updateTimeDisplay();
 
 			setupRegulator(500); // updates regulator 2 times per second
@@ -166,6 +182,76 @@ trace("draw: " + width + " " + height);
 			return _formatProvider;
 		}
 		
+		// text format options
+		[Inspectable(name = "Font", type="Font Name", defaultValue="Arial")]
+		public function set Font(font:String):void
+		{
+			_textFormat.font = font;
+			_displayField.DisplayTextFormat = _textFormat;
+		}
+		public function get Font():String
+		{
+			return _textFormat.font;
+		}
+
+		[Inspectable(name = "TextColor", type="Color", defaultValue="0x000000")]
+		public function set TextColor(c:int):void
+		{
+			_textFormat.color = c;
+			_displayField.DisplayTextFormat = _textFormat;
+		}
+		public function get TextColor():int
+		{
+			return int(_textFormat.color);
+		}
+		
+		[Inspectable(name = "Size", type="Number", defaultValue=12)]
+		public function set Size(s:Number):void
+		{
+			_textFormat.size = s;
+			_displayField.DisplayTextFormat = _textFormat;
+		}
+		public function get Size():Number
+		{
+			return Number(_textFormat.size);
+		}
+
+		[Inspectable(name = "Align", type="String", enumeration="left, center, right", defaultValue="left")]
+		public function set Align(a:String):void
+		{
+			_textFormat.align = a;
+			_displayField.DisplayTextFormat = _textFormat;
+		}
+		public function get Align():String
+		{
+			return _textFormat.align;
+		}
+
+		[Inspectable(name = "Bold", type="Boolean", defaultValue=false)]
+		public function set Bold(b:Boolean):void
+		{
+			_textFormat.bold = b;
+			_displayField.DisplayTextFormat = _textFormat;
+trace("BOLD: " + b);
+		}
+		public function get Bold():Boolean
+		{
+			return _textFormat.bold;
+		}
+		
+		[Inspectable(name = "Italic", type="Boolean", defaultValue=false)]
+		public function set Italic(i:Boolean):void
+		{
+			_textFormat.italic = i;
+			_displayField.DisplayTextFormat = _textFormat;
+			
+trace("ITALIC: " + i);
+		}
+		public function get Italic():Boolean
+		{
+			return _textFormat.italic;
+		}		
+
 		/* INTERFACE se.svt.caspar.template.components.ICasparComponent */
 		
 		[Inspectable(name='description', defaultValue='<component name="CasparSystemTime"></component>')]
