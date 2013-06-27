@@ -30,11 +30,11 @@ trace("CasparSystemTime");
 			_format = "24hh:mm:ss";
 			_formatProvider = new TimerDisplayFormat_24hhmmss();
 			
-			_regulator = new Timer( 500 );	// updates regulator 2 times per second
-			_regulator.addEventListener(TimerEvent.TIMER, onTimerEvent);
-			_regulator.start();
-		}
+			updateTimeDisplay();
 
+			setupRegulator(500); // updates regulator 2 times per second
+		}
+		
 		override protected function configUI():void 
 		{
 trace("configUI");			
@@ -62,6 +62,15 @@ trace("draw: " + width + " " + height);
 			*/
 			// always call super.draw() at the end 
 			super.draw();			
+		}
+		
+		protected function setupRegulator(interval:int):void
+		{
+			this.dispose();
+			
+			_regulator = new Timer( interval );
+			_regulator.addEventListener(TimerEvent.TIMER, onTimerEvent);
+			_regulator.start();
 		}
 		
 		protected function onTimerEvent(e:TimerEvent) : void
@@ -123,6 +132,16 @@ trace("draw: " + width + " " + height);
 					case "hh:mm:ss":
 						_format = f;
 						_formatProvider = new TimerDisplayFormat_hhmmss();
+						break;
+
+					case "24hh:mm":
+						_format = f;
+						_formatProvider = new TimerDisplayFormat_24hhmm();
+						break;
+
+					case "hh:mm":
+						_format = f;
+						_formatProvider = new TimerDisplayFormat_hhmm();
 						break;
 				}
 			}
